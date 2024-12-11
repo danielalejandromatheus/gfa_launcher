@@ -1,10 +1,12 @@
 ﻿
 using System.ComponentModel;
-
+using IniParser;
+using IniParser.Model;
 namespace GFA_Launcher
 {
     public class OptionsData : INotifyPropertyChanged
     {
+        private IniData iniDictionary;
         private int fullScreenMode; //0 = Windowed, 1 = Fullscreen
         public int FullScreenMode
         {
@@ -18,7 +20,7 @@ namespace GFA_Launcher
         }
         public bool IsWindowedMode
         {
-            get => FullScreenMode == 1; 
+            get => FullScreenMode != 1; 
             set => FullScreenMode = value ? 0 : 1; 
         }
         private string screenSize; // 
@@ -174,10 +176,10 @@ namespace GFA_Launcher
                 OnPropertyChanged(nameof(BGMType));
             }
         }
-        private int bgmValoume; // 0 to 1
+        private double bgmValoume; // 0 to 1
         public int BGMValoume
         {
-            get => (int)Math.Round((double)bgmValoume * 100);
+            get => (int)Math.Round(bgmValoume * 100);
             set
             {
                 bgmValoume = value / 100;
@@ -212,6 +214,62 @@ namespace GFA_Launcher
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        public void loadIni()
+        {
+            var iniParser = new FileIniDataParser();
+            // big5 encoding is used for the ini file
+            iniParser.Parser.Configuration.CommentString = "#";
+            iniDictionary = iniParser.ReadFile("client.ini");
+            //TODO: check if dictionary is empty
+            var options = iniDictionary["Option"];
+            FullScreenMode = int.Parse(options["FullScreenMode"]);
+            //Screensize is ScreenWidthxScreenHeight
+            ScreenSize = options["ScreenWidth"] + "x" + options["ScreenHeight"];
+            ViewCharacterRange = int.Parse(options["ViewCharacterRange"]);
+            ViewRange = int.Parse(options["ViewRange"]);
+            CharacterEffectNum = int.Parse(options["CharacterEffectNum"]);
+            ShadowLevel = options["ShadowLevel"];
+            ShadowType = int.Parse(options["ShadowType"]);
+            SceneTexture = options["SceneTexture"];
+            CharacterTexture = options["CharacterTexture"];
+            PPMonochrome = int.Parse(options["PPMonochrome"]) == 1;
+            PPSepia = int.Parse(options["PPSepia"]) == 1;
+            DynamicVideoSetting = int.Parse(options["DynamicVideoSetting"]) == 1;
+            DepthOfField = options["DepthOfField"];
+            FpsLockValue = options["FpsLockValue"];
+            ScreenFrequency = options["ScreenFrequency"];
+            BGMType = options["BGMType"];
+            // Multiply valoume by 100 then round up to the next integer value
+            BGMValoume = (int)Math.Round(double.Parse(options["BGMValoume"]) * 100);
+            SoundValoume = (int)Math.Round(double.Parse(options["SoundValoume"]) * 100);
+            SoundMute = int.Parse(options["SoundMute"]) == 1;
+        }
+        public void saveIni()
+        {
+            var iniParser = new FileIniDataParser();
+            iniParser.Parser.Configuration.CommentString = "#";
+            iniDictionary["Option"]["FullScreenMode"] = FullScreenMode.ToString();
+            iniDictionary["Option"]["ScreenWidth"] = ScreenSize.Split('x')[0];
+            iniDictionary["Option"]["ScreenHeight"] = ScreenSize.Split('x')[1];
+            iniDictionary["Option"]["ViewCharacterRange"] = ViewCharacterRange.ToString();
+            iniDictionary["Option"]["ViewRange"] = ViewRange.ToString();
+            iniDictionary["Option"]["CharacterEffectNum"] = CharacterEffectNum.ToString();
+            iniDictionary["Option"]["ShadowLevel"] = ShadowLevel;
+            iniDictionary["Option"]["ShadowType"] = ShadowType.ToString();
+            iniDictionary["Option"]["SceneTexture"] = SceneTexture;
+            iniDictionary["Option"]["CharacterTexture"] = CharacterTexture;
+            iniDictionary["Option"]["PPMonochrome"] = pPMonochrome.ToString();
+            iniDictionary["Option"]["PPSepia"] = pPSepia.ToString();
+            iniDictionary["Option"]["DynamicVideoSetting"] = dynamicVideoSetting.ToString();
+            iniDictionary["Option"]["DepthOfField"] = DepthOfField;
+            iniDictionary["Option"]["FpsLockValue"] = FpsLockValue;
+            iniDictionary["Option"]["ScreenFrequency"] = ScreenFrequency;
+            iniDictionary["Option"]["BGMType"] = BGMType;
+            iniDictionary["Option"]["BGMValoume"] = bgmValoume.ToString();
+            iniDictionary["Option"]["SoundValoume"] = soundValoume.ToString();
+            iniDictionary["Option"]["SoundMute"] = soundMute.ToString();
+            iniParser.WriteFile("client.ini", iniDictionary);
         }
         public List<string> fpsLockValueList;
         public List<string> screenFrequencyList;
@@ -283,8 +341,15 @@ namespace GFA_Launcher
             bgmValoume = 100;
             soundValoume = 100;
             soundMute = 0;
+            //Default data, load from ini file
+            try
+            {
+                loadIni();
+            }
+            catch (Exception)
+            { Console.WriteLine("there was an error"); }
         }
 
-        
+
     }
 }

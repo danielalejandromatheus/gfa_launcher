@@ -76,7 +76,7 @@ namespace GFA_Launcher
             options.DynamicVideoSetting = true;
             options.DepthOfField = "3";
             options.FpsLockValue = "120";
-            options.ScreenFrequency = "120";
+            options.ScreenFrequency = "999";
         }
         private void setDefaultSettings()
         {
@@ -123,6 +123,17 @@ namespace GFA_Launcher
         private void button6_Click(object sender, EventArgs e)
         {
             setDefaultSettings();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            options.saveIni();
+            this.Close();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
