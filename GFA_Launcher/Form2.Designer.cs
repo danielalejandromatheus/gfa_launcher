@@ -72,12 +72,22 @@ namespace GFA_Launcher
             label14 = new Label();
             BGMValoume = new TrackBar();
             label13 = new Label();
-            optionsDataBindingSource = new BindingSource(components);
+            tabPage3 = new TabPage();
+            groupBox1 = new GroupBox();
+            AutoLoginBox = new ComboBox();
+            label19 = new Label();
+            Remove = new Button();
+            LoginButton = new Button();
+            label18 = new Label();
+            button1 = new Button();
+            label17 = new Label();
+            PasswordField = new TextBox();
+            AccountField = new TextBox();
+            AccountsBox = new ListBox();
             button4 = new Button();
             button5 = new Button();
             button6 = new Button();
-            label5 = new Label();
-            Language = new ComboBox();
+            contextMenuStrip1 = new ContextMenuStrip(components);
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSource).BeginInit();
@@ -88,13 +98,15 @@ namespace GFA_Launcher
             tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SoundValoume).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BGMValoume).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)optionsDataBindingSource).BeginInit();
+            tabPage3.SuspendLayout();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
             // 
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Controls.Add(tabPage2);
+            tabControl1.Controls.Add(tabPage3);
             tabControl1.Location = new Point(19, 13);
             tabControl1.Margin = new Padding(4, 5, 4, 5);
             tabControl1.Name = "tabControl1";
@@ -577,13 +589,135 @@ namespace GFA_Launcher
             label13.TabIndex = 1;
             label13.Text = "BGM";
             // 
-            // optionsDataBindingSource
+            // tabPage3
             // 
-            optionsDataBindingSource.DataSource = typeof(OptionsData);
+            tabPage3.Controls.Add(groupBox1);
+            tabPage3.Location = new Point(4, 34);
+            tabPage3.Name = "tabPage3";
+            tabPage3.Size = new Size(485, 835);
+            tabPage3.TabIndex = 2;
+            tabPage3.Text = "Extras";
+            tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(AutoLoginBox);
+            groupBox1.Controls.Add(label19);
+            groupBox1.Controls.Add(Remove);
+            groupBox1.Controls.Add(LoginButton);
+            groupBox1.Controls.Add(label18);
+            groupBox1.Controls.Add(button1);
+            groupBox1.Controls.Add(label17);
+            groupBox1.Controls.Add(PasswordField);
+            groupBox1.Controls.Add(AccountField);
+            groupBox1.Controls.Add(AccountsBox);
+            groupBox1.Location = new Point(3, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(478, 400);
+            groupBox1.TabIndex = 2;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Account Management";
+            // 
+            // AutoLoginBox
+            // 
+            AutoLoginBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "AutoLogin", true));
+            AutoLoginBox.DisplayMember = "Display";
+            AutoLoginBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            AutoLoginBox.FormattingEnabled = true;
+            AutoLoginBox.Location = new Point(6, 354);
+            AutoLoginBox.Name = "AutoLoginBox";
+            AutoLoginBox.Size = new Size(466, 33);
+            AutoLoginBox.TabIndex = 3;
+            AutoLoginBox.ValueMember = "Value";
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Location = new Point(6, 326);
+            label19.Name = "label19";
+            label19.Size = new Size(100, 25);
+            label19.TabIndex = 8;
+            label19.Text = "Auto Login";
+            // 
+            // Remove
+            // 
+            Remove.Location = new Point(242, 192);
+            Remove.Name = "Remove";
+            Remove.Size = new Size(230, 34);
+            Remove.TabIndex = 7;
+            Remove.Text = "Remove";
+            Remove.UseVisualStyleBackColor = true;
+            Remove.Click += Remove_Click;
+            // 
+            // LoginButton
+            // 
+            LoginButton.Location = new Point(6, 192);
+            LoginButton.Name = "LoginButton";
+            LoginButton.Size = new Size(230, 34);
+            LoginButton.TabIndex = 6;
+            LoginButton.Text = "Login";
+            LoginButton.UseVisualStyleBackColor = true;
+            LoginButton.Click += LoginButton_Click;
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Location = new Point(249, 224);
+            label18.Name = "label18";
+            label18.Size = new Size(87, 25);
+            label18.TabIndex = 4;
+            label18.Text = "Password";
+            // 
+            // button1
+            // 
+            button1.Location = new Point(6, 289);
+            button1.Name = "button1";
+            button1.Size = new Size(466, 34);
+            button1.TabIndex = 5;
+            button1.Text = "Add Account";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click_1;
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Location = new Point(6, 224);
+            label17.Name = "label17";
+            label17.Size = new Size(77, 25);
+            label17.TabIndex = 3;
+            label17.Text = "Account";
+            // 
+            // PasswordField
+            // 
+            PasswordField.BorderStyle = BorderStyle.FixedSingle;
+            PasswordField.Location = new Point(242, 252);
+            PasswordField.Name = "PasswordField";
+            PasswordField.PasswordChar = '*';
+            PasswordField.Size = new Size(230, 31);
+            PasswordField.TabIndex = 2;
+            // 
+            // AccountField
+            // 
+            AccountField.BorderStyle = BorderStyle.FixedSingle;
+            AccountField.Location = new Point(6, 252);
+            AccountField.Name = "AccountField";
+            AccountField.Size = new Size(230, 31);
+            AccountField.TabIndex = 1;
+            // 
+            // AccountsBox
+            // 
+            AccountsBox.DisplayMember = "Username";
+            AccountsBox.FormattingEnabled = true;
+            AccountsBox.ItemHeight = 25;
+            AccountsBox.Location = new Point(6, 32);
+            AccountsBox.Name = "AccountsBox";
+            AccountsBox.Size = new Size(466, 154);
+            AccountsBox.TabIndex = 0;
+            AccountsBox.MouseDoubleClick += AccountsBox_MouseDoubleClick;
             // 
             // button4
             // 
-            button4.Location = new Point(19, 960);
+            button4.Location = new Point(23, 896);
             button4.Margin = new Padding(4, 5, 4, 5);
             button4.Name = "button4";
             button4.Size = new Size(107, 38);
@@ -594,7 +728,7 @@ namespace GFA_Launcher
             // 
             // button5
             // 
-            button5.Location = new Point(283, 960);
+            button5.Location = new Point(287, 896);
             button5.Margin = new Padding(4, 5, 4, 5);
             button5.Name = "button5";
             button5.Size = new Size(107, 38);
@@ -605,7 +739,7 @@ namespace GFA_Launcher
             // 
             // button6
             // 
-            button6.Location = new Point(399, 960);
+            button6.Location = new Point(403, 896);
             button6.Margin = new Padding(4, 5, 4, 5);
             button6.Name = "button6";
             button6.Size = new Size(107, 38);
@@ -614,35 +748,17 @@ namespace GFA_Launcher
             button6.UseVisualStyleBackColor = true;
             button6.Click += button6_Click;
             // 
-            // label5
+            // contextMenuStrip1
             // 
-            label5.AutoSize = true;
-            label5.Location = new Point(24, 900);
-            label5.Margin = new Padding(4, 0, 4, 0);
-            label5.Name = "label5";
-            label5.Size = new Size(89, 25);
-            label5.TabIndex = 10;
-            label5.Text = "Language";
-            // 
-            // Language
-            // 
-            Language.DisplayMember = "Display";
-            Language.DropDownStyle = ComboBoxStyle.DropDownList;
-            Language.FormattingEnabled = true;
-            Language.Location = new Point(260, 895);
-            Language.Margin = new Padding(4, 5, 4, 5);
-            Language.Name = "Language";
-            Language.Size = new Size(244, 33);
-            Language.TabIndex = 29;
-            Language.ValueMember = "Value";
+            contextMenuStrip1.ImageScalingSize = new Size(24, 24);
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(61, 4);
             // 
             // Form2
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(529, 1012);
-            Controls.Add(Language);
-            Controls.Add(label5);
+            ClientSize = new Size(529, 950);
             Controls.Add(button6);
             Controls.Add(button5);
             Controls.Add(button4);
@@ -653,6 +769,7 @@ namespace GFA_Launcher
             MinimizeBox = false;
             Name = "Form2";
             ShowIcon = false;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Configuration";
             Load += Form2_Load;
             tabControl1.ResumeLayout(false);
@@ -667,9 +784,10 @@ namespace GFA_Launcher
             tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)SoundValoume).EndInit();
             ((System.ComponentModel.ISupportInitialize)BGMValoume).EndInit();
-            ((System.ComponentModel.ISupportInitialize)optionsDataBindingSource).EndInit();
+            tabPage3.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -693,7 +811,6 @@ namespace GFA_Launcher
         private Label label4;
         private TrackBar CharacterEffectNum;
         private Label label2;
-        private Label label5;
         private Label label7;
         private TrackBar ShadowType;
         private Label label6;
@@ -709,7 +826,6 @@ namespace GFA_Launcher
         private ComboBox FpsLockValue;
         private Label label12;
         private Label label13;
-        private ComboBox Language;
         private CheckBox SoundMute;
         private ComboBox BGMType;
         private Label label15;
@@ -719,6 +835,18 @@ namespace GFA_Launcher
         private CheckBox DynamicVideoSetting;
         private ComboBox ScreenFrequency;
         private Label label16;
-        private BindingSource optionsDataBindingSource;
+        private TabPage tabPage3;
+        private GroupBox groupBox1;
+        private Label label18;
+        private Label label17;
+        private TextBox PasswordField;
+        private TextBox AccountField;
+        private ListBox AccountsBox;
+        private ContextMenuStrip contextMenuStrip1;
+        private Button button1;
+        private Button LoginButton;
+        private Button Remove;
+        private ComboBox AutoLoginBox;
+        private Label label19;
     }
 }

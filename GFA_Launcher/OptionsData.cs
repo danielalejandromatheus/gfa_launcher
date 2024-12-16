@@ -6,7 +6,7 @@ namespace GFA_Launcher
 {
     public class OptionsData : INotifyPropertyChanged
     {
-        private IniData iniDictionary;
+        private IniData iniDictionary = new IniData();
         private int fullScreenMode; //0 = Windowed, 1 = Fullscreen
         public int FullScreenMode
         {
@@ -20,8 +20,8 @@ namespace GFA_Launcher
         }
         public bool IsWindowedMode
         {
-            get => FullScreenMode != 1; 
-            set => FullScreenMode = value ? 0 : 1; 
+            get => FullScreenMode != 1;
+            set => FullScreenMode = value ? 0 : 1;
         }
         private string screenSize; // 
         public string ScreenSize
@@ -209,7 +209,26 @@ namespace GFA_Launcher
                 OnPropertyChanged(nameof(SoundMute));
             }
         }
-
+        private string language = string.Empty;
+        public string Language
+        {
+            get { return language; }
+            set
+            {
+                language = value;
+                OnPropertyChanged(nameof(Language));
+            }
+        }
+        private string autoLogin = string.Empty;
+        public string AutoLogin
+        {
+            get { return autoLogin; }
+            set
+            {
+                autoLogin = value;
+                OnPropertyChanged(nameof(AutoLogin));
+            }
+        }
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {
@@ -244,6 +263,8 @@ namespace GFA_Launcher
             BGMValoume = (int)Math.Round(double.Parse(options["BGMValoume"]) * 100);
             SoundValoume = (int)Math.Round(double.Parse(options["SoundValoume"]) * 100);
             SoundMute = int.Parse(options["SoundMute"]) == 1;
+            Language = Properties.Settings.Default.Lang;
+            AutoLogin = Properties.Settings.Default.CurrentUsername;
         }
         public void saveIni()
         {
@@ -269,6 +290,10 @@ namespace GFA_Launcher
             iniDictionary["Option"]["BGMValoume"] = bgmValoume.ToString();
             iniDictionary["Option"]["SoundValoume"] = soundValoume.ToString();
             iniDictionary["Option"]["SoundMute"] = soundMute.ToString();
+            Properties.Settings.Default.Lang = Language;
+            Properties.Settings.Default.CurrentUsername = AutoLogin;
+            Properties.Settings.Default.Save();
+
             iniParser.WriteFile("client.ini", iniDictionary);
         }
         public List<string> fpsLockValueList;
@@ -290,38 +315,37 @@ namespace GFA_Launcher
             shadowLevelItems =
             [
                 new Item{ Display="Low", Value = "1" },
-                new Item{ Display="Medium", Value = "2" },
-                new Item{ Display="High", Value = "3" },
-            ];
+                    new Item{ Display="Medium", Value = "2" },
+                    new Item{ Display="High", Value = "3" },
+                ];
             sceneTextureItems =
             [
                 new Item{ Display="Normal", Value = "0" },
-                new Item{ Display="High", Value = "1" },
-            ];
+                    new Item{ Display="High", Value = "1" },
+                ];
             characterTextureItems =
             [
                 new Item{ Display="Normal", Value = "0" },
-                new Item{ Display="High", Value = "1" },
-            ];
+                    new Item{ Display="High", Value = "1" },
+                ];
             depthOfFieldList =
             [
                 new Item{ Display="None", Value = "0" },
-                new Item{ Display="Normal", Value = "1" },
-                new Item{ Display="High", Value = "3" },
-            ];
+                    new Item{ Display="Normal", Value = "1" },
+                    new Item{ Display="High", Value = "3" },
+                ];
             bgmTypeItems =
             [
                 new Item{ Display="Default", Value = "0" },
-                new Item{ Display="BGM Loop", Value = "1" },
-                new Item{ Display="Audio Interval", Value = "2" },
-            ];
+                    new Item{ Display="BGM Loop", Value = "1" },
+                    new Item{ Display="Audio Interval", Value = "2" },
+                ];
             languageItems =
             [
                 new Item{ Display="English", Value = "US" },
-                new Item{ Display="Español", Value = "ES" },
-                new Item{ Display="Português", Value = "PT" },
-                new Item{ Display="Français", Value = "FR" },
-            ];
+                    new Item{ Display="Español", Value = "ES" },
+                    new Item{ Display="Português", Value = "PT" },
+                ];
             fullScreenMode = 0;
             screenSize = "800x600";
             viewCharacterRange = 20;
@@ -349,7 +373,5 @@ namespace GFA_Launcher
             catch (Exception)
             { Console.WriteLine("there was an error"); }
         }
-
-
     }
 }

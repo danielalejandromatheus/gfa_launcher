@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="GFA_Launcher.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Lang" Type="System.String" Scope="User">
+      <Value Profile="(Default)">US</Value>
+    </Setting>
+    <Setting Name="KeyFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">accountsKey.bin</Value>
+    </Setting>
+    <Setting Name="AccountsFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">accountsData.dat</Value>
+    </Setting>
+    <Setting Name="CurrentUsername" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ApiEndpoint" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://gfa.test/api/</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

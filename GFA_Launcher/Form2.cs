@@ -15,12 +15,13 @@ namespace GFA_Launcher
     public partial class Form2 : Form
     {
         OptionsData options;
+        AccountManager accountManager;
         public Form2()
         {
             options = new OptionsData();
+            accountManager = new AccountManager();
             InitializeComponent();
             bindingSource.DataSource = options;
-            Language.DataSource = options.languageItems;
             ScreenSize.DataSource = options.screenSizeList;
             ShadowLevel.DataSource = options.shadowLevelItems;
             SceneTexture.DataSource = options.sceneTextureItems;
@@ -29,6 +30,8 @@ namespace GFA_Launcher
             BGMType.DataSource = options.bgmTypeItems;
             FpsLockValue.DataSource = options.fpsLockValueList;
             ScreenFrequency.DataSource = options.screenFrequencyList;
+            AccountsBox.DataSource = accountManager.Accounts;
+            AutoLoginBox.DataSource = accountManager.AutoLoginOptions;
         }
         private void setLowSettings()
         {
@@ -128,6 +131,7 @@ namespace GFA_Launcher
         private void button5_Click(object sender, EventArgs e)
         {
             options.saveIni();
+            accountManager.SaveAccounts();
             this.Close();
         }
 
@@ -135,5 +139,36 @@ namespace GFA_Launcher
         {
             this.Close();
         }
+
+        private void LoginButton_Click(object sender, EventArgs e)
+        {
+            // Call boot with -a username -p decryptedPassword
+        }
+
+        private void Remove_Click(object sender, EventArgs e)
+        {
+            var selectedAccount = AccountsBox.SelectedIndex;
+            accountManager.RemoveAccount(selectedAccount);
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            accountManager.AddAccount(AccountField.Text, PasswordField.Text);
+            AccountField.Clear();
+            PasswordField.Clear();
+        }
+
+        private void AccountsBox_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            int index = AccountsBox.IndexFromPoint(e.Location);
+
+            if (index != ListBox.NoMatches)
+            {
+                var selectedItem = AccountsBox.Items[index];
+                // Call boot with -a selectedItem -p decryptedPassword
+            }
+        }
+
+
     }
 }

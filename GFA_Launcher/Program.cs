@@ -1,3 +1,5 @@
+using GFA_Launcher.Properties;
+
 namespace GFA_Launcher
 {
     internal static class Program
@@ -8,8 +10,11 @@ namespace GFA_Launcher
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            Application.EnableVisualStyles();
+            if (!File.Exists(Settings.Default.KeyFilePath))
+            {
+                KeyManager.GenerateAndProtectKey();
+            }
             ApplicationConfiguration.Initialize();
             Application.Run(new Launcher());
         }

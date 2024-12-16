@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GFA_Launcher")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+46a43200f9a640e1053bb642400744c4f928f77b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+47343df4758a4aeeed82da8f768acaabd988379d")]
 [assembly: System.Reflection.AssemblyProductAttribute("GFA_Launcher")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GFA_Launcher")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

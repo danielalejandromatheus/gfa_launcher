@@ -29,103 +29,120 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Launcher));
-            label1 = new Label();
-            button1 = new Button();
-            progressBar1 = new ProgressBar();
-            progressBar2 = new ProgressBar();
-            button2 = new Button();
+            button1 = new CustomButton();
+            button2 = new CustomButton();
+            button3 = new CustomButton();
+            StatusLabel = new Label();
+            customButton1 = new CustomButton();
+            LangButton = new CustomButton();
             SuspendLayout();
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.ForeColor = Color.White;
-            label1.Location = new Point(439, 15);
-            label1.Margin = new Padding(4, 0, 4, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(288, 47);
-            label1.TabIndex = 0;
-            label1.Text = "GFA Launcher";
-            label1.Click += label1_Click;
             // 
             // button1
             // 
-            button1.Location = new Point(983, 687);
-            button1.Margin = new Padding(4, 5, 4, 5);
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            button1.Location = new Point(1197, 595);
+            button1.Margin = new Padding(6, 8, 6, 8);
             button1.Name = "button1";
-            button1.Size = new Size(143, 47);
+            button1.Size = new Size(142, 140);
+            button1.SpriteSheet = null;
             button1.TabIndex = 0;
-            button1.Text = "Start";
             button1.Click += button1_Click;
-            // 
-            // progressBar1
-            // 
-            progressBar1.BackColor = SystemColors.Highlight;
-            progressBar1.ForeColor = Color.Black;
-            progressBar1.Location = new Point(14, 613);
-            progressBar1.Margin = new Padding(4, 5, 4, 5);
-            progressBar1.Name = "progressBar1";
-            progressBar1.RightToLeft = RightToLeft.Yes;
-            progressBar1.Size = new Size(1111, 27);
-            progressBar1.Step = 1;
-            progressBar1.Style = ProgressBarStyle.Continuous;
-            progressBar1.TabIndex = 0;
-            progressBar1.Value = 50;
-            // 
-            // progressBar2
-            // 
-            progressBar2.BackColor = SystemColors.Highlight;
-            progressBar2.ForeColor = Color.Black;
-            progressBar2.Location = new Point(14, 650);
-            progressBar2.Margin = new Padding(4, 5, 4, 5);
-            progressBar2.Name = "progressBar2";
-            progressBar2.RightToLeft = RightToLeft.Yes;
-            progressBar2.Size = new Size(1111, 27);
-            progressBar2.Step = 1;
-            progressBar2.Style = ProgressBarStyle.Continuous;
-            progressBar2.TabIndex = 0;
             // 
             // button2
             // 
-            button2.Location = new Point(831, 687);
-            button2.Margin = new Padding(4, 5, 4, 5);
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            button2.Location = new Point(1337, 712);
+            button2.Margin = new Padding(6, 8, 6, 8);
             button2.Name = "button2";
-            button2.Size = new Size(143, 47);
+            button2.Size = new Size(101, 101);
+            button2.SpriteSheet = null;
             button2.TabIndex = 1;
-            button2.Text = "Options";
             button2.Click += button2_Click;
+            // 
+            // button3
+            // 
+            button3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            button3.BackColor = Color.Transparent;
+            button3.BackgroundImageLayout = ImageLayout.None;
+            button3.Location = new Point(1169, 773);
+            button3.Name = "button3";
+            button3.Size = new Size(103, 104);
+            button3.SpriteSheet = null;
+            button3.TabIndex = 2;
+            button3.UseVisualStyleBackColor = false;
+            button3.Click += button3_Click;
+            // 
+            // StatusLabel
+            // 
+            StatusLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            StatusLabel.AutoSize = true;
+            StatusLabel.BackColor = Color.Transparent;
+            StatusLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            StatusLabel.ForeColor = Color.WhiteSmoke;
+            StatusLabel.Location = new Point(495, 778);
+            StatusLabel.MaximumSize = new Size(620, 40);
+            StatusLabel.MinimumSize = new Size(620, 40);
+            StatusLabel.Name = "StatusLabel";
+            StatusLabel.Size = new Size(620, 40);
+            StatusLabel.TabIndex = 0;
+            StatusLabel.Text = "Placeholder";
+            StatusLabel.Click += StatusLabel_Click;
+            // 
+            // customButton1
+            // 
+            customButton1.Location = new Point(1142, 250);
+            customButton1.Name = "customButton1";
+            customButton1.Size = new Size(34, 34);
+            customButton1.SpriteSheet = null;
+            customButton1.TabIndex = 3;
+            customButton1.UseVisualStyleBackColor = true;
+            customButton1.Click += customButton1_Click;
+            // 
+            // LangButton
+            // 
+            LangButton.Location = new Point(1169, 429);
+            LangButton.Name = "LangButton";
+            LangButton.Size = new Size(103, 103);
+            LangButton.SpriteSheet = null;
+            LangButton.TabIndex = 4;
+            LangButton.UseVisualStyleBackColor = true;
+            LangButton.Click += LangButton_Click;
             // 
             // Launcher
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(144F, 144F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BackColor = SystemColors.Window;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
-            ClientSize = new Size(1140, 737);
+            BackgroundImageLayout = ImageLayout.Zoom;
+            ClientSize = new Size(1631, 954);
+            Controls.Add(LangButton);
+            Controls.Add(customButton1);
+            Controls.Add(StatusLabel);
+            Controls.Add(button3);
             Controls.Add(button2);
-            Controls.Add(progressBar2);
-            Controls.Add(progressBar1);
             Controls.Add(button1);
-            Controls.Add(label1);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            Margin = new Padding(4, 5, 4, 5);
+            DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(6, 8, 6, 8);
             MaximizeBox = false;
             Name = "Launcher";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Launcher";
+            Text = "Awakening Launcher";
+            TransparencyKey = Color.Lime;
             Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private Label label1;
-        private Button button1;
-        private ProgressBar progressBar1;
-        private ProgressBar progressBar2;
-        private Button button2;
+        private Label StatusLabel;
+        private CustomButton button3;
+        private CustomButton button1;
+        private CustomButton button2;
+        private CustomButton customButton1;
+        private CustomButton LangButton;
     }
 }
