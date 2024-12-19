@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel;
+using System.Text;
 using IniParser;
 using IniParser.Model;
 namespace GFA_Launcher
@@ -182,7 +183,7 @@ namespace GFA_Launcher
             get => (int)Math.Round(bgmValoume * 100);
             set
             {
-                bgmValoume = value / 100;
+                bgmValoume = (double)value / 100;
                 OnPropertyChanged(nameof(BGMValoume));
             }
         }
@@ -194,7 +195,7 @@ namespace GFA_Launcher
             get { return (int)Math.Round(soundValoume * 100); }
             set
             {
-                soundValoume = value / 100;
+                soundValoume = (double)value / 100;
                 OnPropertyChanged(nameof(SoundValoume));
             }
         }
@@ -237,8 +238,11 @@ namespace GFA_Launcher
         public void loadIni()
         {
             var iniParser = new FileIniDataParser();
+            iniParser.Parser.Configuration.NewLineStr = "\n";
+            iniParser.Parser.Configuration.CommentString = "// ";
+            iniParser.Parser.Configuration.AssigmentSpacer = "";
+            //iniParser.Parser.Configuration.NewLineStr = "\n";
             // big5 encoding is used for the ini file
-            iniParser.Parser.Configuration.CommentString = "#";
             iniDictionary = iniParser.ReadFile("client.ini");
             //TODO: check if dictionary is empty
             var options = iniDictionary["Option"];
@@ -269,7 +273,9 @@ namespace GFA_Launcher
         public void saveIni()
         {
             var iniParser = new FileIniDataParser();
-            iniParser.Parser.Configuration.CommentString = "#";
+            iniParser.Parser.Configuration.NewLineStr = "\n";
+            iniParser.Parser.Configuration.CommentString = "// ";
+            iniParser.Parser.Configuration.AssigmentSpacer = "";
             iniDictionary["Option"]["FullScreenMode"] = FullScreenMode.ToString();
             iniDictionary["Option"]["ScreenWidth"] = ScreenSize.Split('x')[0];
             iniDictionary["Option"]["ScreenHeight"] = ScreenSize.Split('x')[1];
@@ -362,8 +368,8 @@ namespace GFA_Launcher
             fpsLockValue = "60";
             screenFrequency = "60";
             bgmType = "0";
-            bgmValoume = 100;
-            soundValoume = 100;
+            bgmValoume = 1;
+            soundValoume = 1;
             soundMute = 0;
             //Default data, load from ini file
             try

@@ -87,7 +87,10 @@ namespace GFA_Launcher
             {
                 lines.Add($"{acc.Username}|{acc.Secret}");
             }
-            File.SetAttributes(Properties.Settings.Default.AccountsFilePath, FileAttributes.Normal);
+            if(File.Exists(Properties.Settings.Default.AccountsFilePath))
+            {
+                File.SetAttributes(Properties.Settings.Default.AccountsFilePath, FileAttributes.Normal);
+            }
             File.WriteAllLines(Properties.Settings.Default.AccountsFilePath, lines);
             File.SetAttributes(Properties.Settings.Default.AccountsFilePath, FileAttributes.Hidden);
         }

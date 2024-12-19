@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using System.Text;
 
 namespace GFA_Launcher
 {
@@ -20,7 +20,6 @@ namespace GFA_Launcher
 
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-
         private const int WS_EX_LAYERED = 0x80000;
         private const int LWA_COLORKEY = 0x1;
         private const int WM_NCLBUTTONDOWN = 0xA1;
@@ -52,6 +51,7 @@ namespace GFA_Launcher
             button1.SpriteSheet = Properties.Resources.Bitmap232;
             button2.SpriteSheet = Properties.Resources.Bitmap231;
             button3.SpriteSheet = Properties.Resources.Bitmap210;
+            // Load a webpage
             int style = NativeMethods.GetWindowLong(this.Handle, -20);
             NativeMethods.SetWindowLong(this.Handle, -20, style | WS_EX_LAYERED);
             // Set the green color as transparent
@@ -236,11 +236,7 @@ namespace GFA_Launcher
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = "D:\\Descargas\\074\\Ultimate\\GrandFantasia.exe";
-            startInfo.Arguments = "EasyFun";
-            startInfo.WorkingDirectory = "D:\\Descargas\\074\\Ultimate";
-            Process.Start(startInfo);
+            LaunchHelper.LaunchGame(Properties.Settings.Default.CurrentUsername);
         }
 
         private void button2_Click(object sender, EventArgs e)

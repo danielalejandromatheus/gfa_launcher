@@ -142,7 +142,8 @@ namespace GFA_Launcher
 
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            // Call boot with -a username -p decryptedPassword
+            AccountManager.AccountData? selectedAccount = AccountsBox.SelectedItem as AccountManager.AccountData;
+            if(selectedAccount != null)LaunchHelper.LaunchGame(selectedAccount.Username);
         }
 
         private void Remove_Click(object sender, EventArgs e)

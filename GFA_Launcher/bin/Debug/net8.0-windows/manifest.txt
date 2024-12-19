@@ -1,2 +1,0 @@
-v1.0.0
-test.txt:804d716fc5844f1cc5516c8f0be7a480517fdea2:20
