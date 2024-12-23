@@ -1,0 +1,2 @@
+C:\Users\danie\source\repos\gfa_launcher\GFA_Launcher\bin\Release\net8.0-windows\publish\win-x86\GFA_Launcher.dll.config
+C:\Users\danie\source\repos\gfa_launcher\GFA_Launcher\bin\Release\net8.0-windows\publish\win-x86\GFA_Launcher.exe

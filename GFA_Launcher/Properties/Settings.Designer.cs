@@ -35,27 +35,21 @@ namespace GFA_Launcher.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("accountsKey.bin")]
         public string KeyFilePath {
             get {
                 return ((string)(this["KeyFilePath"]));
             }
-            set {
-                this["KeyFilePath"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("accountsData.dat")]
         public string AccountsFilePath {
             get {
                 return ((string)(this["AccountsFilePath"]));
-            }
-            set {
-                this["AccountsFilePath"] = value;
             }
         }
         
@@ -71,15 +65,12 @@ namespace GFA_Launcher.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://gfa.test/api/")]
         public string ApiEndpoint {
             get {
                 return ((string)(this["ApiEndpoint"]));
-            }
-            set {
-                this["ApiEndpoint"] = value;
             }
         }
     }

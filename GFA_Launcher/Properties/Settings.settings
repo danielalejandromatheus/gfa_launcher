@@ -5,16 +5,16 @@
     <Setting Name="Lang" Type="System.String" Scope="User">
       <Value Profile="(Default)">US</Value>
     </Setting>
-    <Setting Name="KeyFilePath" Type="System.String" Scope="User">
+    <Setting Name="KeyFilePath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">accountsKey.bin</Value>
     </Setting>
-    <Setting Name="AccountsFilePath" Type="System.String" Scope="User">
+    <Setting Name="AccountsFilePath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">accountsData.dat</Value>
     </Setting>
     <Setting Name="CurrentUsername" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ApiEndpoint" Type="System.String" Scope="User">
+    <Setting Name="ApiEndpoint" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://gfa.test/api/</Value>
     </Setting>
   </Settings>

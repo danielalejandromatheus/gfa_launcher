@@ -1,11 +1,9 @@
 using Newtonsoft.Json.Linq;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using System.Text;
-
+//using System.Windows.Forms.WebBrowser;
 namespace GFA_Launcher
 {
     public partial class Launcher : Form
@@ -20,8 +18,6 @@ namespace GFA_Launcher
 
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        private const int WS_EX_LAYERED = 0x80000;
-        private const int LWA_COLORKEY = 0x1;
         private const int WM_NCLBUTTONDOWN = 0xA1;
         private const int HTCAPTION = 0x2;
         internal static class NativeMethods
@@ -41,24 +37,17 @@ namespace GFA_Launcher
             // set json content type for all requests
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             InitializeComponent();
-            LangButton.BackColor = Color.Transparent;
-            customButton1.BackColor = Color.Transparent;
-            button1.BackColor = Color.Transparent;
-            button2.BackColor = Color.Transparent;
-            button3.BackColor = Color.Transparent;
-            UpdateLangButton(Properties.Settings.Default.Lang);
-            customButton1.SpriteSheet = Properties.Resources.Bitmap208;
-            button1.SpriteSheet = Properties.Resources.Bitmap232;
-            button2.SpriteSheet = Properties.Resources.Bitmap231;
-            button3.SpriteSheet = Properties.Resources.Bitmap210;
-            // Load a webpage
-            int style = NativeMethods.GetWindowLong(this.Handle, -20);
-            NativeMethods.SetWindowLong(this.Handle, -20, style | WS_EX_LAYERED);
-            // Set the green color as transparent
-            uint greenColorKey = (uint)ColorTranslator.ToWin32(Color.FromArgb(0, 255, 0));
-            SetLayeredWindowAttributes(this.Handle, greenColorKey, 0, LWA_COLORKEY);
-            //this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
-            this.ClientSize = new System.Drawing.Size(1127, 659);
+            webBrowser = new WebBrowser();
+            webBrowser.Location = new Point(320, 223);
+            webBrowser.MinimumSize = new Size(20, 20);
+            webBrowser.Name = "webBrowser";
+            webBrowser.ScrollBarsEnabled = false;
+            webBrowser.ClientSize = new Size(480, 300);
+            webBrowser.Size = new Size(480, 300);
+            webBrowser.TabIndex = 1;
+            webBrowser.Url = new Uri("http://www.google.com", UriKind.Absolute);
+            UpdateLangButton(Properties.Settings.Default.Lang.ToString());
+            this.Controls.Add(webBrowser);
             this.MouseDown += new MouseEventHandler(Form_MouseDown);
 
         }
@@ -89,14 +78,6 @@ namespace GFA_Launcher
             }
         }
 
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
-            // Ensure transparency is applied after form is displayed
-            uint greenColorKey = (uint)ColorTranslator.ToWin32(Color.FromArgb(0, 255, 0));
-            SetLayeredWindowAttributes(this.Handle, greenColorKey, 0, LWA_COLORKEY);
-        }
-
         private List<string> fileList = new List<string>();
         private async Task DownloadFiles()
         {
@@ -104,8 +85,7 @@ namespace GFA_Launcher
             if (!Directory.Exists("temp"))
             {
                 Directory.CreateDirectory("temp");
-                // directory should be hidden
-                //File.SetAttributes("temp", File.GetAttributes("temp") | FileAttributes.Hidden);
+                File.SetAttributes("temp", File.GetAttributes("temp") | FileAttributes.Hidden);
             }
             foreach (string file in fileList)
             {
@@ -230,27 +210,6 @@ namespace GFA_Launcher
             Notify("Ready to play");
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            LaunchHelper.LaunchGame(Properties.Settings.Default.CurrentUsername);
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //Open Form2 as a dialog
-            Form2 form2 = new Form2();
-            form2.ShowDialog();
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            ScanFiles();
-        }
-
         private void Notify(string message)
         {
             StatusLabel.Text = message;
@@ -261,9 +220,8 @@ namespace GFA_Launcher
 
         }
 
-        private void customButton1_Click(object sender, EventArgs e)
+        private void CloseButton_Click(object sender, EventArgs e)
         {
-            //close the app
             Application.Exit();
         }
 
@@ -272,6 +230,23 @@ namespace GFA_Launcher
             LanguageSelector langSelector = new LanguageSelector();
             langSelector.LanguageSelected += UpdateLangButton;
             langSelector.ShowDialog();
+        }
+
+        private void LaunchButton_Click(object sender, EventArgs e)
+        {
+            LaunchHelper.LaunchGame(Properties.Settings.Default.CurrentUsername);
+        }
+
+        private void OptionsButton_Click(object sender, EventArgs e)
+        {
+
+            OptionSelector optionDialog = new OptionSelector();
+            optionDialog.ShowDialog();
+        }
+
+        private void ScanButton_Click(object sender, EventArgs e)
+        {
+            ScanFiles();
         }
     }
 }

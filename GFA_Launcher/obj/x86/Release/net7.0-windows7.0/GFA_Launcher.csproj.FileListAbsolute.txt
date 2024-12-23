@@ -1,0 +1,10 @@
+C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net7.0-windows7.0\GFA_Launcher.csproj.AssemblyReference.cache
+C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net7.0-windows7.0\GFA_Launcher.Launcher.resources
+C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net7.0-windows7.0\GFA_Launcher.Form2.resources
+C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net7.0-windows7.0\GFA_Launcher.LanguageSelector.resources
+C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net7.0-windows7.0\GFA_Launcher.Properties.Resources.resources
+C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net7.0-windows7.0\GFA_Launcher.csproj.GenerateResource.cache
+C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net7.0-windows7.0\GFA_Launcher.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net7.0-windows7.0\GFA_Launcher.AssemblyInfoInputs.cache
+C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net7.0-windows7.0\GFA_Launcher.AssemblyInfo.cs
+C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net7.0-windows7.0\GFA_Launcher.csproj.CoreCompileInputs.cache

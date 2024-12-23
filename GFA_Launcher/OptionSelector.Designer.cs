@@ -2,7 +2,7 @@
 
 namespace GFA_Launcher
 {
-    partial class Form2
+    partial class OptionSelector
     {
         /// <summary>
         /// Required designer variable.
@@ -613,7 +613,7 @@ namespace GFA_Launcher
             groupBox1.Controls.Add(AccountsBox);
             groupBox1.Location = new Point(3, 3);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(478, 400);
+            groupBox1.Size = new Size(478, 416);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "Account Management";
@@ -624,7 +624,7 @@ namespace GFA_Launcher
             AutoLoginBox.DisplayMember = "Display";
             AutoLoginBox.DropDownStyle = ComboBoxStyle.DropDownList;
             AutoLoginBox.FormattingEnabled = true;
-            AutoLoginBox.Location = new Point(6, 354);
+            AutoLoginBox.Location = new Point(6, 377);
             AutoLoginBox.Name = "AutoLoginBox";
             AutoLoginBox.Size = new Size(466, 33);
             AutoLoginBox.TabIndex = 3;
@@ -633,7 +633,7 @@ namespace GFA_Launcher
             // label19
             // 
             label19.AutoSize = true;
-            label19.Location = new Point(6, 326);
+            label19.Location = new Point(6, 349);
             label19.Name = "label19";
             label19.Size = new Size(100, 25);
             label19.TabIndex = 8;
@@ -642,8 +642,9 @@ namespace GFA_Launcher
             // Remove
             // 
             Remove.Location = new Point(242, 192);
+            Remove.MinimumSize = new Size(0, 39);
             Remove.Name = "Remove";
-            Remove.Size = new Size(230, 34);
+            Remove.Size = new Size(230, 39);
             Remove.TabIndex = 7;
             Remove.Text = "Remove";
             Remove.UseVisualStyleBackColor = true;
@@ -653,7 +654,7 @@ namespace GFA_Launcher
             // 
             LoginButton.Location = new Point(6, 192);
             LoginButton.Name = "LoginButton";
-            LoginButton.Size = new Size(230, 34);
+            LoginButton.Size = new Size(230, 39);
             LoginButton.TabIndex = 6;
             LoginButton.Text = "Login";
             LoginButton.UseVisualStyleBackColor = true;
@@ -662,7 +663,7 @@ namespace GFA_Launcher
             // label18
             // 
             label18.AutoSize = true;
-            label18.Location = new Point(249, 224);
+            label18.Location = new Point(242, 229);
             label18.Name = "label18";
             label18.Size = new Size(87, 25);
             label18.TabIndex = 4;
@@ -670,9 +671,9 @@ namespace GFA_Launcher
             // 
             // button1
             // 
-            button1.Location = new Point(6, 289);
+            button1.Location = new Point(6, 307);
             button1.Name = "button1";
-            button1.Size = new Size(466, 34);
+            button1.Size = new Size(466, 39);
             button1.TabIndex = 5;
             button1.Text = "Add Account";
             button1.UseVisualStyleBackColor = true;
@@ -681,7 +682,7 @@ namespace GFA_Launcher
             // label17
             // 
             label17.AutoSize = true;
-            label17.Location = new Point(6, 224);
+            label17.Location = new Point(6, 229);
             label17.Name = "label17";
             label17.Size = new Size(77, 25);
             label17.TabIndex = 3;
@@ -690,7 +691,7 @@ namespace GFA_Launcher
             // PasswordField
             // 
             PasswordField.BorderStyle = BorderStyle.FixedSingle;
-            PasswordField.Location = new Point(242, 252);
+            PasswordField.Location = new Point(242, 257);
             PasswordField.Name = "PasswordField";
             PasswordField.PasswordChar = '*';
             PasswordField.Size = new Size(230, 31);
@@ -699,7 +700,7 @@ namespace GFA_Launcher
             // AccountField
             // 
             AccountField.BorderStyle = BorderStyle.FixedSingle;
-            AccountField.Location = new Point(6, 252);
+            AccountField.Location = new Point(6, 257);
             AccountField.Name = "AccountField";
             AccountField.Size = new Size(230, 31);
             AccountField.TabIndex = 1;
@@ -754,7 +755,7 @@ namespace GFA_Launcher
             contextMenuStrip1.Name = "contextMenuStrip1";
             contextMenuStrip1.Size = new Size(61, 4);
             // 
-            // Form2
+            // OptionSelector
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -767,7 +768,7 @@ namespace GFA_Launcher
             Margin = new Padding(4, 5, 4, 5);
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "Form2";
+            Name = "OptionSelector";
             ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Configuration";

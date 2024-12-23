@@ -10,7 +10,9 @@ namespace GFA_Launcher
         [STAThread]
         static void Main()
         {
+            Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
             Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
             if (!File.Exists(Settings.Default.KeyFilePath))
             {
                 KeyManager.GenerateAndProtectKey();

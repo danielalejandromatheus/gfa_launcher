@@ -12,11 +12,11 @@ namespace GFA_Launcher
 {
 
     // Structure of options
-    public partial class Form2 : Form
+    public partial class OptionSelector : Form
     {
         OptionsData options;
         AccountManager accountManager;
-        public Form2()
+        public OptionSelector()
         {
             options = new OptionsData();
             accountManager = new AccountManager();
