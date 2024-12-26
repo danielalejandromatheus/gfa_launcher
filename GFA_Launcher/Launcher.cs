@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Text;
 //using System.Windows.Forms.WebBrowser;
 namespace GFA_Launcher
 {
@@ -69,6 +70,50 @@ namespace GFA_Launcher
                     break;
             }
         }
+
+        private void PatchGameOnLanguageSelected(string Lang)
+        {
+            List<long> offsets = new List<long>
+            {
+                0x8C00F5, 0x8C0B7D, 0x8C0BF5, 0x8C1841, 0x8C18A5, 0x8C1935,
+                0x8C1975, 0x8C19D5, 0x8C1AB1, 0x8C1B5D, 0x8C1FF9, 0x8C2039,
+                0x8C20D5, 0x8C21F1, 0x8C2231, 0x8C22C1, 0x8C2301, 0x8C2369,
+                0x8C23A9, 0x8C243D, 0x8C24D1, 0x8C255D, 0x8C2595, 0x8C25D5,
+                0x8C2611, 0x8C2651, 0x8C26AD, 0x8C26E9, 0x8C2745, 0x8C28DD,
+                0x8C2929, 0x8C2959, 0x8C2995, 0x8C29D5, 0x8C2A19, 0x8C2A71
+            };
+
+            string defaultPath = "data\\Translate"; 
+            string path = defaultPath;  
+            switch (Lang)
+            {
+                case "ES":
+                    path = "data\\Trans_ESP";
+                    break;
+                case "PT":
+                    path = "data\\Transl_PT";
+                    break;
+            }
+            
+            // Very important to keep the alternate paths the same exact length 
+            // otherwise it results in an invalid path.
+            if (path.Length != defaultPath.Length) {
+                Notify($"Invalid language path ${path}...");
+                return;
+            }
+
+            byte[] pathBytes = Encoding.UTF8.GetBytes(path);
+            using (FileStream fs = new FileStream("GrandFantasia.exe", FileMode.Open, FileAccess.Write))
+            {
+                foreach (long offset in offsets)
+                {
+                    fs.Seek(offset + 1, SeekOrigin.Begin);
+                    fs.Write(pathBytes, 0, pathBytes.Length);
+                }
+            }
+            Notify($"Game language patched successfully.");
+        }            
+
         private void Form_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -229,6 +274,7 @@ namespace GFA_Launcher
         {
             LanguageSelector langSelector = new LanguageSelector();
             langSelector.LanguageSelected += UpdateLangButton;
+            langSelector.LanguageSelected += PatchGameOnLanguageSelected;
             langSelector.ShowDialog();
         }
 
