@@ -177,6 +177,8 @@ namespace GFA_Launcher
                 string fileName = parts[0];
                 string hash = parts[1];
                 string size = parts[2];
+                // TODO: Get zsize as well for packaged files!
+
                 Notify($"Scanning {fileName}...");
                 // Check if the file exists
                 if (!File.Exists(fileName))
