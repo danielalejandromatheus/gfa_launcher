@@ -10,6 +10,27 @@ namespace GFA_Launcher
 {
     public class LaunchHelper
     {
+        public static string GetLang()
+        {
+            string path = String.Empty;
+            using (FileStream fs = new FileStream("GrandFantasia.exe", FileMode.Open, FileAccess.Read))
+            {
+                fs.Seek(0x8C2A71 + 1, SeekOrigin.Begin);
+                byte[] buffer = new byte[14];
+                fs.Read(buffer, 0, 14);
+                path = Encoding.Default.GetString(buffer);
+                switch (path)
+                {
+                    case "data\\Trans_ESP":
+                        return "ES";
+                    case "data\\Transl_PT":
+                        return "PT";
+                    case "data\\Translate":
+                    default:
+                        return "US";
+                }
+            }
+        }
         public static void LaunchGame(string username)
         {
 

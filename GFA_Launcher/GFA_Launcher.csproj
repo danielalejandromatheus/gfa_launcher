@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>icon1.ico</ApplicationIcon>
     <Platforms>AnyCPU;x86</Platforms>
-    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+    <AssemblyName>Launcher</AssemblyName>
     <UseWPF>False</UseWPF>
 	  
   </PropertyGroup>

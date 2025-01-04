@@ -11,6 +11,8 @@ namespace GFA_Launcher
 {
     public class AccountManager
     {
+        const string AccountsFilePath = "accountsData.dat";
+        const string AccountsKeyPath = "accountsKey.bin";
         private BindingList<AccountData> accounts;
         private BindingList<Item> autoLoginOptions;
         public AccountManager()
@@ -87,19 +89,19 @@ namespace GFA_Launcher
             {
                 lines.Add($"{acc.Username}|{acc.Secret}");
             }
-            if(File.Exists(Properties.Settings.Default.AccountsFilePath))
+            if(File.Exists(AccountsFilePath))
             {
-                File.SetAttributes(Properties.Settings.Default.AccountsFilePath, FileAttributes.Normal);
+                File.SetAttributes(AccountsFilePath, FileAttributes.Normal);
             }
-            File.WriteAllLines(Properties.Settings.Default.AccountsFilePath, lines);
-            File.SetAttributes(Properties.Settings.Default.AccountsFilePath, FileAttributes.Hidden);
+            File.WriteAllLines(AccountsFilePath, lines);
+            File.SetAttributes(AccountsFilePath, FileAttributes.Hidden);
         }
 
         private void LoadAccounts()
         {
-            if (!File.Exists(Properties.Settings.Default.AccountsFilePath)) return;
+            if (!File.Exists(AccountsFilePath)) return;
 
-            var lines = File.ReadAllLines(Properties.Settings.Default.AccountsFilePath);
+            var lines = File.ReadAllLines(AccountsFilePath);
 
             foreach (var line in lines)
             {

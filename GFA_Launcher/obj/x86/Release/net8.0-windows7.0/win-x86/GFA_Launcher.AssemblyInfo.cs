@@ -11,12 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("GFA_Launcher")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Launcher")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+981db48688c878aa59142cd9f6a582ede50fcb20")]
-[assembly: System.Reflection.AssemblyProductAttribute("GFA_Launcher")]
-[assembly: System.Reflection.AssemblyTitleAttribute("GFA_Launcher")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a616ba517efbd302740a9f4b4243fc2f186337fa")]
+[assembly: System.Reflection.AssemblyProductAttribute("Launcher")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Launcher")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]

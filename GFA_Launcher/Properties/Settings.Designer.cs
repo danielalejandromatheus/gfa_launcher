@@ -25,36 +25,6 @@ namespace GFA_Launcher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("US")]
-        public string Lang {
-            get {
-                return ((string)(this["Lang"]));
-            }
-            set {
-                this["Lang"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("accountsKey.bin")]
-        public string KeyFilePath {
-            get {
-                return ((string)(this["KeyFilePath"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("accountsData.dat")]
-        public string AccountsFilePath {
-            get {
-                return ((string)(this["AccountsFilePath"]));
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string CurrentUsername {
             get {
@@ -62,15 +32,6 @@ namespace GFA_Launcher.Properties {
             }
             set {
                 this["CurrentUsername"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://gfa.test/api/")]
-        public string ApiEndpoint {
-            get {
-                return ((string)(this["ApiEndpoint"]));
             }
         }
     }

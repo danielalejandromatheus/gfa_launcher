@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\danie\\source\\repos\\gfa_launcher\\GFA_Launcher\\GFA_Launcher.csproj": {}
+    "C:\\Users\\danie\\Source\\Repos\\gfa_launcher\\GFA_Launcher\\GFA_Launcher.csproj": {}
   },
   "projects": {
-    "C:\\Users\\danie\\source\\repos\\gfa_launcher\\GFA_Launcher\\GFA_Launcher.csproj": {
+    "C:\\Users\\danie\\Source\\Repos\\gfa_launcher\\GFA_Launcher\\GFA_Launcher.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\danie\\source\\repos\\gfa_launcher\\GFA_Launcher\\GFA_Launcher.csproj",
-        "projectName": "GFA_Launcher",
-        "projectPath": "C:\\Users\\danie\\source\\repos\\gfa_launcher\\GFA_Launcher\\GFA_Launcher.csproj",
+        "projectUniqueName": "C:\\Users\\danie\\Source\\Repos\\gfa_launcher\\GFA_Launcher\\GFA_Launcher.csproj",
+        "projectName": "Launcher",
+        "projectPath": "C:\\Users\\danie\\Source\\Repos\\gfa_launcher\\GFA_Launcher\\GFA_Launcher.csproj",
         "packagesPath": "C:\\Users\\danie\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\danie\\source\\repos\\gfa_launcher\\GFA_Launcher\\obj\\publish\\win-x86\\",
+        "outputPath": "C:\\Users\\danie\\Source\\Repos\\gfa_launcher\\GFA_Launcher\\obj\\publish\\win-x86\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

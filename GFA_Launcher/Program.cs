@@ -1,4 +1,4 @@
-using GFA_Launcher.Properties;
+using System.Net;
 
 namespace GFA_Launcher
 {
@@ -10,10 +10,11 @@ namespace GFA_Launcher
         [STAThread]
         static void Main()
         {
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
             Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (!File.Exists(Settings.Default.KeyFilePath))
+            if (!File.Exists("accountsKey.bin"))
             {
                 KeyManager.GenerateAndProtectKey();
             }

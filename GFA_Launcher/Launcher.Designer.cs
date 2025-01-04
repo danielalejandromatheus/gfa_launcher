@@ -108,7 +108,7 @@
             // Launcher
             // 
             AutoScaleMode = AutoScaleMode.None;
-            BackColor = SystemColors.Window;
+            BackColor = Color.Lime;
             BackgroundImage = Properties.Resources.LauncherGFA;
             BackgroundImageLayout = ImageLayout.None;
             ClientSize = new Size(1127, 659);

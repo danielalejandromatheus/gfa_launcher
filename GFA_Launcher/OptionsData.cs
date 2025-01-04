@@ -241,13 +241,10 @@ namespace GFA_Launcher
             iniParser.Parser.Configuration.NewLineStr = "\n";
             iniParser.Parser.Configuration.CommentString = "// ";
             iniParser.Parser.Configuration.AssigmentSpacer = "";
-            //iniParser.Parser.Configuration.NewLineStr = "\n";
-            // big5 encoding is used for the ini file
             iniDictionary = iniParser.ReadFile("client.ini");
             //TODO: check if dictionary is empty
             var options = iniDictionary["Option"];
             FullScreenMode = int.Parse(options["FullScreenMode"]);
-            //Screensize is ScreenWidthxScreenHeight
             ScreenSize = options["ScreenWidth"] + "x" + options["ScreenHeight"];
             ViewCharacterRange = int.Parse(options["ViewCharacterRange"]);
             ViewRange = int.Parse(options["ViewRange"]);
@@ -263,11 +260,10 @@ namespace GFA_Launcher
             FpsLockValue = options["FpsLockValue"];
             ScreenFrequency = options["ScreenFrequency"];
             BGMType = options["BGMType"];
-            // Multiply valoume by 100 then round up to the next integer value
             BGMValoume = (int)Math.Round(double.Parse(options["BGMValoume"]) * 100);
             SoundValoume = (int)Math.Round(double.Parse(options["SoundValoume"]) * 100);
             SoundMute = int.Parse(options["SoundMute"]) == 1;
-            Language = Properties.Settings.Default.Lang;
+            Language = LaunchHelper.GetLang();
             AutoLogin = Properties.Settings.Default.CurrentUsername;
         }
         public void saveIni()
@@ -296,7 +292,6 @@ namespace GFA_Launcher
             iniDictionary["Option"]["BGMValoume"] = bgmValoume.ToString();
             iniDictionary["Option"]["SoundValoume"] = soundValoume.ToString();
             iniDictionary["Option"]["SoundMute"] = soundMute.ToString();
-            Properties.Settings.Default.Lang = Language;
             Properties.Settings.Default.CurrentUsername = AutoLogin;
             Properties.Settings.Default.Save();
 

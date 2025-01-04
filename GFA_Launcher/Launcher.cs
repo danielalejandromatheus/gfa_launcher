@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Security;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -33,7 +34,7 @@ namespace GFA_Launcher
         {
             client = new HttpClient
             {
-                BaseAddress = new Uri(Properties.Settings.Default.ApiEndpoint)
+                BaseAddress = new Uri("http://gfa.test")
             };
             // set json content type for all requests
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -46,8 +47,8 @@ namespace GFA_Launcher
             webBrowser.ClientSize = new Size(480, 300);
             webBrowser.Size = new Size(480, 300);
             webBrowser.TabIndex = 1;
-            webBrowser.Url = new Uri("http://www.google.com", UriKind.Absolute);
-            UpdateLangButton(Properties.Settings.Default.Lang.ToString());
+            webBrowser.Url = new Uri("https://www.gfawakening.online/patch-notes.html", UriKind.Absolute);
+            UpdateLangButton(LaunchHelper.GetLang());
             this.Controls.Add(webBrowser);
             this.MouseDown += new MouseEventHandler(Form_MouseDown);
 
@@ -83,8 +84,8 @@ namespace GFA_Launcher
                 0x8C2929, 0x8C2959, 0x8C2995, 0x8C29D5, 0x8C2A19, 0x8C2A71
             };
 
-            string defaultPath = "data\\Translate"; 
-            string path = defaultPath;  
+            string defaultPath = "data\\Translate";
+            string path = defaultPath;
             switch (Lang)
             {
                 case "ES":
@@ -94,10 +95,11 @@ namespace GFA_Launcher
                     path = "data\\Transl_PT";
                     break;
             }
-            
+
             // Very important to keep the alternate paths the same exact length 
             // otherwise it results in an invalid path.
-            if (path.Length != defaultPath.Length) {
+            if (path.Length != defaultPath.Length)
+            {
                 Notify($"Invalid language path ${path}...");
                 return;
             }
@@ -112,7 +114,7 @@ namespace GFA_Launcher
                 }
             }
             Notify($"Game language patched successfully.");
-        }            
+        }
 
         private void Form_MouseDown(object sender, MouseEventArgs e)
         {
@@ -250,7 +252,7 @@ namespace GFA_Launcher
         private async void Form1_Load(object sender, EventArgs e)
         {
 
-            Notify("Initializing...");
+            //Notify("Initializing...");
             //await TaskHelper.ExecuteWithRetryAsync(InitializeLauncher, (int retries, string message) => { Notify("Error ocurred, retrying..."); });
             Notify("Ready to play");
         }
@@ -292,7 +294,8 @@ namespace GFA_Launcher
 
         private void ScanButton_Click(object sender, EventArgs e)
         {
-            ScanFiles();
+            MessageBox.Show("Not available for BETA.");
+            //ScanFiles();
         }
     }
 }
