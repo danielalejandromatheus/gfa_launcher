@@ -124,14 +124,23 @@
   <data name="ENG" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ENG.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Bitmap228" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bitmap228.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Bitmap232" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Bitmap232.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Bitmap231" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Bitmap231.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Bitmap227" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bitmap227.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Bitmap210" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Bitmap210.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LauncherGFA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LauncherGFA.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Bitmap208" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Bitmap208.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -139,7 +148,7 @@
   <data name="BR" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BR.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="LauncherGFA" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LauncherGFA.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Bitmap226" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bitmap226.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

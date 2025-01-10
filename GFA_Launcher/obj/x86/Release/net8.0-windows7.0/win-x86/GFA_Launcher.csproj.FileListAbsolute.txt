@@ -20,3 +20,6 @@ C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\bin\x86\Release\net8.0-win
 C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net8.0-windows7.0\win-x86\Launcher.dll
 C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net8.0-windows7.0\win-x86\refint\Launcher.dll
 C:\Users\danie\Source\Repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net8.0-windows7.0\win-x86\ref\Launcher.dll
+C:\Users\danie\source\repos\gfa_launcher\GFA_Launcher\bin\x86\Release\net8.0-windows7.0\win-x86\Launcher.pdb
+C:\Users\danie\source\repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net8.0-windows7.0\win-x86\GFA_Launcher.sourcelink.json
+C:\Users\danie\source\repos\gfa_launcher\GFA_Launcher\obj\x86\Release\net8.0-windows7.0\win-x86\Launcher.pdb

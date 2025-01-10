@@ -1,2 +1,3 @@
-C:\Users\danie\source\repos\gfa_launcher\GFA_Launcher\bin\Release\net8.0-windows\publish\win-x86\GFA_Launcher.dll.config
-C:\Users\danie\source\repos\gfa_launcher\GFA_Launcher\bin\Release\net8.0-windows\publish\win-x86\GFA_Launcher.exe
+C:\Users\danie\source\repos\gfa_launcher\GFA_Launcher\bin\Release\net8.0-windows\publish\win-x86\Launcher.pdb
+C:\Users\danie\source\repos\gfa_launcher\GFA_Launcher\bin\Release\net8.0-windows\publish\win-x86\Launcher.dll.config
+C:\Users\danie\source\repos\gfa_launcher\GFA_Launcher\bin\Release\net8.0-windows\publish\win-x86\Launcher.exe

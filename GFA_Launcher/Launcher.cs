@@ -1,15 +1,15 @@
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
-using System.Net.Security;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Text;
 //using System.Windows.Forms.WebBrowser;
 namespace GFA_Launcher
 {
     public partial class Launcher : Form
     {
+        HttpDownloader httpDownloader;
         HttpClient client;
         // Import SetLayeredWindowAttributes from user32.dll
         [DllImport("user32.dll", SetLastError = true)]
@@ -30,12 +30,16 @@ namespace GFA_Launcher
             [DllImport("user32.dll", SetLastError = true)]
             public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
         }
+        //private System.Windows.Forms.Timer timer;
+        //private int progressValue = 0;
         public Launcher()
         {
             client = new HttpClient
             {
-                BaseAddress = new Uri("http://gfa.test")
+                BaseAddress = new Uri("http://gfa.test/api/")
             };
+            httpDownloader = new HttpDownloader("http://gfa.test/api/");
+            manifest = new Dictionary<string, IdxItemModel>(); // Initialize the manifest dictionary
             // set json content type for all requests
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             InitializeComponent();
@@ -50,8 +54,37 @@ namespace GFA_Launcher
             webBrowser.Url = new Uri("https://www.gfawakening.online/patch-notes.html", UriKind.Absolute);
             UpdateLangButton(LaunchHelper.GetLang());
             this.Controls.Add(webBrowser);
-            this.MouseDown += new MouseEventHandler(Form_MouseDown);
+            //this.MouseDown += new MouseEventHandler(Form_MouseDown);
+            EnableDragging(this);
+            EnableDragging(StatusLabel);
+            EnableDragging(OverallProgressBar);
+            EnableDragging(SingleProgressBar);
+            //timer = new System.Windows.Forms.Timer { Interval = 50 };
 
+            //timer.Tick += Timer_Tick;
+            //timer.Start();
+        }
+        //private void Timer_Tick(object sender, EventArgs e)
+        //{
+        //    // Increment progress
+        //    progressValue += 1;
+        //    if (progressValue > 100)
+        //    {
+        //        progressValue = 0; // Reset progress for a looped animation
+        //    }
+
+        //    SingleProgressBar.Progress = progressValue; // Update the progress bar
+        //}
+        private void EnableDragging(Control control)
+        {
+            control.MouseDown += (s, e) =>
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    ReleaseCapture();
+                    SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+                }
+            };
         }
         private void UpdateLangButton(string Lang)
         {
@@ -125,148 +158,211 @@ namespace GFA_Launcher
             }
         }
 
-        private List<string> fileList = new List<string>();
-        private async Task DownloadFiles()
+        private Dictionary<string, IdxItemModel> manifest;
+        private async void DownloadLauncher(int size)
         {
-            // make temp folder to store files if it doesn't exist
-            if (!Directory.Exists("temp"))
-            {
-                Directory.CreateDirectory("temp");
-                File.SetAttributes("temp", File.GetAttributes("temp") | FileAttributes.Hidden);
-            }
-            foreach (string file in fileList)
-            {
-                // download file using httpclient
-                Notify($"Downloading ${file}...");
-                using (var response = await client.GetAsync("/download/" + file))
-                {
-                    response.EnsureSuccessStatusCode();
-                    using (var fileStream = File.OpenWrite("temp/" + file))
-                    {
-                        await response.Content.CopyToAsync(fileStream);
-                    }
-                }
-                // Downloading and append file name
-                // TODO: add progress bar while downloading
-                // TODO: add error handling
-                /*
-                if(File.Exists("temp/" + file))
-                {
-                    //TODO: package the file as soon as it is downloaded
+            await httpDownloader.DownloadFileWithRetriesAsync("download/Launcher.exe", "Launcher.exe", size, (string message, int type) => { Notify(message, type); }, (double progress) => { SingleProgressBar.Progress = progress; });
+            // Get the directory of the current executable
+            string? currentExe = Environment.ProcessPath;
+            string currentExeDirectory = Path.GetDirectoryName(currentExe) ?? string.Empty;
 
-                    File.Delete("temp/" + file);
-                }*/
-            }
-        }
-        private static string GetFileHash(string filePath)
-        {
-            using (SHA1 sha256 = SHA1.Create())
-            using (FileStream fileStream = File.OpenRead(filePath))
+            // Start the cloned version with arguments
+            Process.Start(new ProcessStartInfo
             {
-                byte[] hashBytes = sha256.ComputeHash(fileStream);
-                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-            }
+                FileName = Path.Combine(currentExeDirectory, "Launcher.exe"),
+                UseShellExecute = false
+            });
+            Application.Exit();
         }
-        private async void ScanFiles()
+        private async Task ScanFiles()
         {
+            // This is a brief scan of the files in the manifest.txt file compared against pkg.idx
             // Get a list of the files to scan in the current manifest
+            OverallProgressBar.Progress = 0;
+            int idx = 0;
             string[] lines = File.ReadAllLines("manifest.txt");
-            //List<string> files = new List<string>();
-            // Excl8de the first line which is the version
             foreach (string line in lines.Skip(1))
             {
+                SingleProgressBar.Progress = 0;
                 string[] parts = line.Split(':');
-                string fileName = parts[0];
-                string hash = parts[1];
-                string size = parts[2];
-                // TODO: Get zsize as well for packaged files!
-
-                Notify($"Scanning {fileName}...");
-                // Check if the file exists
-                if (!File.Exists(fileName))
+                string file = parts[0];
+                // filename is the last item in the string after the last slash
+                string fileName = Path.GetFileName(file);
+                // file path is the first item in the string before the last slash, if it is the same as the file name, then it is in the root directory
+                string filePath = Path.GetDirectoryName(file);
+                Notify($"Scanning {filePath}\\{fileName}...", 0);
+                IdxItemModel item = new IdxItemModel
                 {
-                    fileList.Add(fileName);
+                    file_name = fileName,
+                    file_path = filePath,
+                    size = int.Parse(parts[1]),
+                    hashCRC = uint.Parse(parts[2]),
+                    zsize = int.Parse(parts[3])
+                };
+                // if it returns null and the zsize is 0 it means we have to check manually here if it should be redownloaded, if not it means it'll be calculated in the packager script
+                if (item.zsize == 0 && Path.Exists(Path.Combine(item.file_path, item.file_name)))
+                {
+                    int size = (int)new FileInfo(file).Length;
+                    uint hashCRC = Rycrc.Crc32.Compute(File.ReadAllBytes(file));
+                    if (hashCRC != item.hashCRC && size != item.size)
+                    {
+                        manifest[Path.Combine(item.file_path, item.file_name)] = item;
+                    }
                 }
                 else
                 {
-                    // If the file exists, check if the hash is the same
-                    string fileHash = GetFileHash(fileName);
-                    if (fileHash != hash)
-                    {
-                        // If the hash is different, add the file to the download list
-                        fileList.Add(fileName);
-                    }
+                    manifest[Path.Combine(item.file_path, item.file_name)] = item;
                 }
+                SingleProgressBar.Progress = 100;
+                idx++;
+                double progress = ((double)idx / lines.Length) * 100;
+                OverallProgressBar.Progress = progress;
                 // TODO review logic later
             }
-            // Download filelist after it's done scanning and there's files in the queue
-            if (fileList.Count > 0)
+            await HandleUpdate();
+        }
+        private async Task HandleUpdate()
+        {
+            // First download uncompressed files if there is any, then remove them from the manifest so the packager does not have leftover data
+            int idx = 0;
+            OverallProgressBar.Progress = 0;
+            var uncompressedFiles = manifest.Where(x => x.Value.zsize == 0).ToList();
+            if (uncompressedFiles.Any())
             {
-                await TaskHelper.ExecuteWithRetryAsync(DownloadFiles, (int retries, string message) => { Notify("Error ocurred, retrying..."); });
+                foreach (var uncompressedFile in uncompressedFiles)
+                {
+                    if (uncompressedFile.Value.file_path != "\\" && uncompressedFile.Value.file_path != "" && !Directory.Exists(uncompressedFile.Value.file_path))
+                    {
+                        Directory.CreateDirectory(uncompressedFile.Value.file_path);
+                    }
+                    if (uncompressedFile.Key != "Launcher.exe")
+                    {
+                        await httpDownloader.DownloadFileWithRetriesAsync($"download/{uncompressedFile.Key}", uncompressedFile.Key, uncompressedFile.Value.zsize == 0 ? uncompressedFile.Value.size : uncompressedFile.Value.zsize, (string message, int type) => { Notify(message, type); }, (double progress) => { SingleProgressBar.Progress = progress; }, uncompressedFile.Key);
+                    }
+                    else
+                    {
+                        //DownloadLauncher(uncompressedFile.Value.size);
+                    }
+                    idx++;
+                    double progress = ((double)idx / manifest.Count) * 100;
+                    OverallProgressBar.Progress = progress;
+                }
             }
-            else
+            var compressedFiles = manifest.Where(x => x.Value.zsize > 0).ToDictionary();
+
+            if (compressedFiles.Count > 0)
             {
-                Notify("All files are up to date!");
+                var packagedUpdater = new PackagedFileUpdater { FileCount = manifest.Count, FileIndex = idx };
+                packagedUpdater.Notify += Notify;
+                packagedUpdater.NotifyProgress += (double progress) => { SingleProgressBar.Progress = progress; };
+                packagedUpdater.NotifyOverallProgress += (double progress) => { OverallProgressBar.Progress = progress; };
+                await packagedUpdater.ScanAndUpdateFiles(compressedFiles, httpDownloader);
             }
         }
-        private async Task InitializeLauncher()
+        private void ChangeActionsState(bool state)
         {
-            if (File.Exists("manifest.txt"))
+            LangButton.Enabled = state;
+            LaunchButton.Enabled = state;
+            OptionsButton.Enabled = state;
+            ScanButton.Enabled = state;
+        }
+        private async void InitializeLauncher()
+        {
+            Notify("Initializing...");
+            ChangeActionsState(false);
+            OverallProgressBar.Progress = 100;
+            while (true)
             {
-                HttpResponseMessage response = await client.GetAsync("getManifestVersion");
-                if (response != null && response.StatusCode == HttpStatusCode.OK)
+                if (File.Exists("manifest.txt"))
                 {
-                    string result = await response.Content.ReadAsStringAsync();
-                    var serverVersion = JObject.Parse(result)["version"];
-                    if (serverVersion != null)
+                    Notify("Checking manifest version", 1);
+                    HttpResponseMessage response = await client.GetAsync("getManifestVersion");
+                    if (response != null && response.StatusCode == HttpStatusCode.OK)
                     {
-                        string[] currentLines = File.ReadAllLines("manifest.txt");
-                        string currentVersion = currentLines[0];
-                        if (serverVersion.ToString() == currentVersion)
+                        try
                         {
-                            return;
+                            string result = await response.Content.ReadAsStringAsync();
+                            var serverVersion = JObject.Parse(result)["version"];
+                            if (serverVersion != null)
+                            {
+                                string[] currentLines = File.ReadAllLines("manifest.txt");
+                                string currentVersion = currentLines[0];
+                                if (serverVersion.ToString() == currentVersion)
+                                {
+                                    SingleProgressBar.Progress = 100;
+                                    await ScanFiles();
+                                    return;
+                                }
+                                else
+                                {
+                                    Notify("Manifest version mismatch, redownloading...", 1);
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            Notify("Manifest is corrupted, redownloading...", 2);
+                            File.Delete("manifest.txt");
+                            Task.Delay(1000).Wait();
+                            continue;
                         }
                     }
-                }
-                else
-                {
-                    // Notify something went wrong, retry
-                }
-                // Download manifest.txt from the server
-                HttpResponseMessage manifestMessage = await client.GetAsync("getManifestFile");
-                if (manifestMessage != null && manifestMessage.StatusCode == HttpStatusCode.OK)
-                {
-                    //this will download a .txt file from the server, we should then write it to disk
-                    string manifestResult = await manifestMessage.Content.ReadAsStringAsync();
-                    if (manifestResult != null)
+                    else
                     {
-                        File.WriteAllText("manifest.txt", manifestResult);
-                        // MessageBox.Show("New version available, updating...");
-                        ScanFiles();
+                        // Notify something went wrong, notify site is down and retry
+                        Notify("Failed to get manifest version from server, retrying...", 2);
+                        Task.Delay(1000).Wait();
+                        continue;
                     }
+                    // Download manifest.txt from the server
+                    //HttpResponseMessage manifestMessage = await client.GetAsync("getManifestFile");
+                    await httpDownloader.DownloadFileWithRetriesAsync("getManifestFile", "manifest.txt", 0, (string message, int type) => { Notify(message, type); }, (double progress) => { SingleProgressBar.Progress = progress; }, "manifest file");
+                    await ScanFiles();
+                    break;
                 }
                 else
                 {
-                    // Handle error, retry
+                    // Download manifest.txt from the server
+                    await httpDownloader.DownloadFileWithRetriesAsync("getManifestFile", "manifest.txt", 0, (string message, int type) => { Notify(message, type); }, (double progress) => { SingleProgressBar.Progress = progress; }, "manifest file");
+                    await ScanFiles();
+                    break;
                 }
             }
-        }
-        private async void Form1_Load(object sender, EventArgs e)
-        {
-
-            //Notify("Initializing...");
-            //await TaskHelper.ExecuteWithRetryAsync(InitializeLauncher, (int retries, string message) => { Notify("Error ocurred, retrying..."); });
+            ChangeActionsState(true);
             Notify("Ready to play");
         }
-
-        private void Notify(string message)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            StatusLabel.Text = message;
+            InitializeLauncher();
         }
-
-        private void StatusLabel_Click(object sender, EventArgs e)
+        /**
+         * @param message: The message to display in the status label
+         * @param type: The type of message to display
+         * 0: Information
+         * 1: Download
+         * 2: Error
+         */
+        private void Notify(string message, int type = -1)
         {
-
+            switch (type)
+            {
+                case 0:
+                    StatusLabel.ForeColor = Color.FromArgb(150, 190, 255);
+                    break;
+                case 1:
+                    // Light green
+                    StatusLabel.ForeColor = Color.FromArgb(180, 255, 200);
+                    break;
+                case 2:
+                    // Light red
+                    StatusLabel.ForeColor = Color.FromArgb(170, 0, 0);
+                    break;
+                default:
+                    // Default to information
+                    StatusLabel.ForeColor = Color.WhiteSmoke;
+                    break;
+            }
+            StatusLabel.Text = message;
         }
 
         private void CloseButton_Click(object sender, EventArgs e)
@@ -294,10 +390,9 @@ namespace GFA_Launcher
             optionDialog.ShowDialog();
         }
 
-        private void ScanButton_Click(object sender, EventArgs e)
+        private async void ScanButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not available for BETA.");
-            //ScanFiles();
+            await ScanFiles();
         }
     }
 }

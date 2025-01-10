@@ -35,6 +35,8 @@
             ScanButton = new CustomButton();
             OptionsButton = new CustomButton();
             LaunchButton = new CustomButton();
+            OverallProgressBar = new CustomProgressBar();
+            SingleProgressBar = new CustomProgressBar();
             SuspendLayout();
             // 
             // StatusLabel
@@ -51,7 +53,6 @@
             StatusLabel.Size = new Size(620, 40);
             StatusLabel.TabIndex = 0;
             StatusLabel.Text = "Placeholder";
-            StatusLabel.Click += StatusLabel_Click;
             // 
             // CloseButton
             // 
@@ -105,6 +106,26 @@
             LaunchButton.UseVisualStyleBackColor = true;
             LaunchButton.Click += LaunchButton_Click;
             // 
+            // OverallProgressBar
+            // 
+            OverallProgressBar.Location = new Point(346, 565);
+            OverallProgressBar.Name = "OverallProgressBar";
+            OverallProgressBar.Progress = 0D;
+            OverallProgressBar.Size = new Size(430, 16);
+            OverallProgressBar.SpritesheetCompleted = Properties.Resources.Bitmap227;
+            OverallProgressBar.SpritesheetUncompleted = Properties.Resources.Bitmap226;
+            OverallProgressBar.TabIndex = 6;
+            // 
+            // SingleProgressBar
+            // 
+            SingleProgressBar.Location = new Point(346, 581);
+            SingleProgressBar.Name = "SingleProgressBar";
+            SingleProgressBar.Progress = 0D;
+            SingleProgressBar.Size = new Size(430, 16);
+            SingleProgressBar.SpritesheetCompleted = Properties.Resources.Bitmap228;
+            SingleProgressBar.SpritesheetUncompleted = Properties.Resources.Bitmap226;
+            SingleProgressBar.TabIndex = 7;
+            // 
             // Launcher
             // 
             AutoScaleMode = AutoScaleMode.None;
@@ -112,6 +133,8 @@
             BackgroundImage = Properties.Resources.LauncherGFA;
             BackgroundImageLayout = ImageLayout.None;
             ClientSize = new Size(1127, 659);
+            Controls.Add(SingleProgressBar);
+            Controls.Add(OverallProgressBar);
             Controls.Add(LaunchButton);
             Controls.Add(OptionsButton);
             Controls.Add(ScanButton);
@@ -141,5 +164,7 @@
         private CustomButton ScanButton;
         private CustomButton OptionsButton;
         private CustomButton LaunchButton;
+        private CustomProgressBar OverallProgressBar;
+        private CustomProgressBar SingleProgressBar;
     }
 }

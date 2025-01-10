@@ -1,23 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
-using System.Drawing.Imaging;
-using System.Diagnostics;
 
 namespace GFA_Launcher
 {
-    public static class PackagedFileUpdater
+    public class PackagedFileUpdater
     {
-        static Dictionary<string, IdxItemModel> idx_list = [];
+        Dictionary<string, IdxItemModel> idx_list = [];
 
         static List<IdxItemModel> diffNewFiles = [];
         static List<IdxItemModel> diffMismatch = [];
         static List<IdxItemModel> diffDeletedFiles = [];
+        HttpDownloader httpDownloader;
 
         static int last_pkg_id = 1;
 
@@ -25,9 +17,18 @@ namespace GFA_Launcher
 
         static string get_pkg_name(int int_0) => ((int_0 < 10) ? ("pkg00" + int_0) : ((int_0 >= 100) ? ("pkg" + int_0) : ("pkg0" + int_0))) + ".pkg";
 
-        public static void ScanAndUpdateFiles(List<IdxItemModel> manifest)
+
+        public delegate void NotifyHandlerCallback(string message, int type);
+        public event NotifyHandlerCallback? Notify;
+        public delegate void NotifyProgressHandlerCallback(double progress);
+        public event NotifyProgressHandlerCallback? NotifyProgress;
+        public event NotifyProgressHandlerCallback? NotifyOverallProgress;
+        public int FileCount = 0;
+        public int FileIndex = 0;
+
+        public async Task ScanAndUpdateFiles(Dictionary<string, IdxItemModel> manifest, HttpDownloader httpDownloader)
         {
-            idx_list = new Dictionary<string, IdxItemModel>();
+            this.httpDownloader = httpDownloader;
 
             diffNewFiles = new List<IdxItemModel>();
             diffMismatch = new List<IdxItemModel>();
@@ -39,7 +40,7 @@ namespace GFA_Launcher
 
             Console.Write("\nLoading existing IDX map...\n");
 
-            LoadIDXFile();
+            idx_list = LoadIDXFile(manifest);
 
             Console.Write("\nDiffing IDX map..\n");
 
@@ -67,6 +68,7 @@ namespace GFA_Launcher
             LoadArchives();
 
             Console.Write("\nHandle deleted files...\n");
+            Notify?.Invoke("Cleaning up deleted files...", 0);
             diffDeletedFiles.ForEach(DeleteFile);
 
             Console.Write("\nHandle mismatch files..\n");
@@ -75,7 +77,7 @@ namespace GFA_Launcher
             Console.Write("\nDownloading and adding new files..\n");
 
             // Download and flush new packages to .pkg 
-            HandleNewFiles();
+            await HandleNewFiles();
 
             Console.Write("Saving IDX map...\n");
             SaveNewIDXObfuscated();
@@ -86,12 +88,13 @@ namespace GFA_Launcher
             Console.Write("\nThis is it.\n");
         }
 
-        static void LoadIDXFile()
+        public static Dictionary<string, IdxItemModel> LoadIDXFile(Dictionary<string, IdxItemModel> manifest)
         {
+            Dictionary<string, IdxItemModel> keyValuePairs = new Dictionary<string, IdxItemModel>();
             try
             {
                 using FileStream fileStream = new FileStream("pkg.idx", FileMode.Open, FileAccess.Read, FileShare.Read, 65535, FileOptions.SequentialScan);
-                if (!fileStream.CanRead) return;
+                if (!fileStream.CanRead) return keyValuePairs;
 
                 byte[] buffer = new byte[292];
                 fileStream.Read(buffer, 0, 292);
@@ -130,24 +133,40 @@ namespace GFA_Launcher
                     fileStream.Seek(4, SeekOrigin.Current);
                     fileStream.Read(buffer, 0, 4);
                     item.pkg_id = BitConverter.ToInt32(buffer, 0);
-                    idx_list[Path.Combine(item.file_path, item.file_name)] = item;
+
+                    string itemFullPath = Path.Combine(item.file_path, item.file_name);
+
+                    // Find the matching key in the manifest using a case-insensitive comparison
+                    var matchingKey = manifest.Keys.FirstOrDefault(key =>
+                        string.Equals(key, itemFullPath, StringComparison.OrdinalIgnoreCase));
+
+                    if (matchingKey != null)
+                    {
+                        // Retrieve the manifest item using the found key
+                        var manifestItem = manifest[matchingKey];
+                        item.file_name = manifestItem.file_name;
+                        item.file_path = manifestItem.file_path;
+                    }
+
+                    keyValuePairs[Path.Combine(item.file_path, item.file_name)] = item;
                 }
             }
             catch (Exception)
             {
             }
+            return keyValuePairs;
         }
 
-        static void DiffIDXAndManifest(List<IdxItemModel> manifest)
+        private void DiffIDXAndManifest(Dictionary<string, IdxItemModel> manifest)
         {
-            foreach (IdxItemModel manifestFile in manifest)
+            foreach (var manifestFile in manifest)
             {
-                string path = Path.Combine(manifestFile.file_path, manifestFile.file_name);
+                string path = Path.Combine(manifestFile.Value.file_path, manifestFile.Value.file_name);
 
                 IdxItemModel idxItem;
                 if (idx_list.TryGetValue(path, out idxItem))
                 {
-                    if ((manifestFile.hashCRC != idxItem.hashCRC) || (manifestFile.zsize != idxItem.zsize))
+                    if ((manifestFile.Value.hashCRC != idxItem.hashCRC) || (manifestFile.Value.zsize != idxItem.zsize))
                     {
                         diffMismatch.Add(idxItem);
                         diffNewFiles.Add(idxItem);
@@ -155,11 +174,11 @@ namespace GFA_Launcher
                 }
                 else
                 {
-                    diffNewFiles.Add(manifestFile);
+                    diffNewFiles.Add(manifestFile.Value);
                 }
             }
 
-            HashSet<string> manifestFileSet = [.. manifest.Select(x => Path.Combine(x.file_path, x.file_name))];
+            HashSet<string> manifestFileSet = new HashSet<string>(manifest.Select(x => Path.Combine(x.Value.file_path, x.Value.file_name)));
             foreach (var idxEntry in idx_list.Values)
             {
                 if (!manifestFileSet.Contains(Path.Combine(idxEntry.file_path, idxEntry.file_name)))
@@ -169,11 +188,13 @@ namespace GFA_Launcher
             }
         }
 
-        static void CreateCustomSP()
+        private void CreateCustomSP()
         {
-            Console.WriteLine("Creating sp file for " + (Directory.GetFiles("*.pkg").Length - 1) + " files");
+            string currentDirectory = Directory.GetCurrentDirectory();
+            var files = Directory.GetFiles(currentDirectory, "*.pkg").Length - 1;
+            Notify($"Creating sp file for {files} files", 0);
             using FileStream fileStream = new FileStream("pkg.sp", FileMode.Create, FileAccess.ReadWrite, FileShare.Read, 65535, FileOptions.None);
-            for (int i = 0; i < Directory.GetFiles("*.pkg").Length - 1; i++)
+            for (int i = 0; i < files; i++)
             {
                 int num = i + 1;
                 string text = get_pkg_name(num);
@@ -189,8 +210,9 @@ namespace GFA_Launcher
             fileStream.Close();
         }
 
-        static void LoadArchives()
+        private void LoadArchives()
         {
+            Notify?.Invoke("Loading packaged files...", 0);
             for (int i = 1; i < 800; i++)
             {
                 string text = Path.Combine(get_pkg_name(i));
@@ -213,7 +235,7 @@ namespace GFA_Launcher
             }
         }
 
-        static void DeleteFile(IdxItemModel mismatchItem)
+        private void DeleteFile(IdxItemModel mismatchItem)
         {
             string path = Path.Combine(mismatchItem.file_path, mismatchItem.file_name);
 
@@ -273,20 +295,30 @@ namespace GFA_Launcher
             pkg_lengths[pkgId] = newLength;
         }
 
-        static void HandleNewFiles()
+        private async Task HandleNewFiles()
         {
+            //Before downloading any file, check if hidden directory  gamedata exists, this will contain any compressed file
+            if (!Directory.Exists("gamedata"))
+            {
+                Directory.CreateDirectory("gamedata");
+                File.SetAttributes("gamedata", File.GetAttributes("gamedata") | FileAttributes.Hidden);
+            }
             foreach (IdxItemModel newItem in diffNewFiles)
             {
                 string path = Path.Combine(newItem.file_path, newItem.file_name);
 
                 Console.WriteLine($"DOWNLOAD NEW {path}");
 
-                // TODO: Connect here to download compressed and encrypted file:
-
-                byte[] fileToWrite = ...; // File.ReadAllBytes(Path.Combine(path + "_Z_"));
-
-                // TODO: Delete file once read in memory (probably no need to even save it to disk!)
-
+                if (!Directory.Exists(Path.Combine("gamedata", newItem.file_path)))
+                {
+                    Directory.CreateDirectory(Path.Combine("gamedata", newItem.file_path));
+                }
+                await httpDownloader.DownloadFileWithRetriesAsync($"download/compressed/{path}", Path.Combine("gamedata", path), newItem.zsize, (string message, int type) => { Notify(message, type); }, (double progress) => { NotifyProgress(progress); }, path);
+                byte[] fileToWrite = File.ReadAllBytes(Path.Combine("gamedata", path));
+                File.Delete(Path.Combine("gamedata", path));
+                // Delete subfolder
+                Directory.Delete(Path.Combine("gamedata", newItem.file_path), true);
+                Notify.Invoke($"Compressing ${path}...", 0);
                 if (fileToWrite.Length > 10485760)
                 {
                     Console.WriteLine("File is too big to fit into any pkg file.");
@@ -308,6 +340,8 @@ namespace GFA_Launcher
                 if (pkgId == -1)
                 {
                     Console.WriteLine("No pkg file can fit file. Perhaps new file is too big.");
+                    FileIndex++;
+                    NotifyOverallProgress((double)((double)FileIndex / FileCount) * 100);
                     continue;
                 }
 
@@ -338,50 +372,67 @@ namespace GFA_Launcher
                     Array.Resize(ref pkg_lengths, pkgId + 1);
                 }
                 pkg_lengths[pkgId] += fileToWrite.Length;
+                FileIndex++;
+                NotifyOverallProgress((double)((double)FileIndex / FileCount) * 100);
             }
         }
 
-        static void SaveNewIDXObfuscated()
+        private void SaveNewIDXObfuscated()
         {
             int num = -1;
             int num2 = 0;
             using FileStream fileStream = new FileStream("pkg.idx", FileMode.Create, FileAccess.ReadWrite, FileShare.Read, 65535, FileOptions.None);
             fileStream.Write(new byte[292], 0, 292);
+            Notify("Writing index file...", 0);
+            NotifyOverallProgress(0);
             foreach (KeyValuePair<string, IdxItemModel> item in idx_list)
             {
                 num2++;
                 num++;
+                NotifyProgress(0);
                 int num3 = (int)fileStream.Position;
                 idx_list[item.Key].index_offset = num3;
                 byte[] bytes = BitConverter.GetBytes(num);
                 fileStream.Write(bytes, 0, 4);
+                NotifyProgress((1.0 / 11.0) * 100);
                 bytes = BitConverter.GetBytes(item.Value.offset);
                 fileStream.Write(bytes, 0, 4);
+                NotifyProgress((2.0 / 11.0) * 100);
                 bytes = BitConverter.GetBytes(num3);
                 fileStream.Write(bytes, 0, 4);
+                NotifyProgress((3.0 / 11.0) * 10);
                 bytes = BitConverter.GetBytes(item.Value.zsize);
                 fileStream.Write(bytes, 0, 4);
+                NotifyProgress((4.0 / 11.0) * 100);
                 bytes = BitConverter.GetBytes(item.Value.update_timestamp);
                 fileStream.Write(bytes, 0, 8);
+                NotifyProgress((5.0 / 11.0) * 100);
                 bytes = BitConverter.GetBytes(item.Value.file_timestamp);
                 fileStream.Write(bytes, 0, 8);
                 fileStream.Write(new byte[8], 0, 8);
                 fileStream.Write(new byte[8], 0, 8);
                 fileStream.Write(new byte[4], 0, 4);
+                NotifyProgress((6.0 / 11.0) * 100);
                 bytes = BitConverter.GetBytes(item.Value.hashCRC);
                 fileStream.Write(bytes, 0, 4);
+                NotifyProgress((7.0 / 11.0) * 100);
                 bytes = BitConverter.GetBytes(item.Value.size);
                 fileStream.Write(bytes, 0, 4);
+                NotifyProgress((8.0 / 11.0) * 100);
                 bytes = Encoding.UTF8.GetBytes(item.Value.file_name);
                 fileStream.Write(bytes, 0, bytes.Length);
                 fileStream.Write(new byte[260 - bytes.Length], 0, 260 - bytes.Length);
+                NotifyProgress((9.0 / 11.0) * 100);
                 bytes = Encoding.UTF8.GetBytes(item.Value.file_path);
                 fileStream.Write(bytes, 0, bytes.Length);
                 fileStream.Write(new byte[260 - bytes.Length], 0, 260 - bytes.Length);
                 fileStream.Write(new byte[4], 0, 4);
                 fileStream.Write(new byte[4], 0, 4);
+                NotifyProgress((10.0 / 11.0) * 100);
                 bytes = BitConverter.GetBytes(item.Value.pkg_id);
                 fileStream.Write(bytes, 0, 4);
+                NotifyProgress((11.0 / 11.0) * 100);
+                NotifyOverallProgress((double)((double)num2 / idx_list.Count) * 100);
             }
             fileStream.Close();
         }
